@@ -5,7 +5,7 @@ import isAuthenticatedMiddleware from '../middlewares/isAuthenticatedMiddleware.
 
 const productRouter = Router()
 
-productRouter.get('/', isAuthenticatedMiddleware, async (req, res) => {
+productRouter.get('/', async (req, res) => {
     const { order } = req.query
     const query = {}
     
