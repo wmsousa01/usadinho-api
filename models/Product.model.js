@@ -9,7 +9,7 @@ const productSchema = new Schema({
 
     image: {
         type: String,
-        required: true
+        required: false
     },
 
     price: {
@@ -32,6 +32,11 @@ const productSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Comment"
     }],
+
+    user: {
+        type: Schema.Types.ObjectId,
+        ref:"User"
+    }
 
 }, { timestamps: true })
 

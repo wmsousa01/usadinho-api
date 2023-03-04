@@ -3,23 +3,23 @@ import Product from '../models/Product.model.js'
 import fileUpload from '../config/cloudinary.config.js'
 import isAuthenticatedMiddleware from '../middlewares/isAuthenticatedMiddleware.js'
 
-const productRouter = Router()
+const userProductsRouter = Router()
 
-productRouter.get('/', isAuthenticatedMiddleware, async (req, res) => {
+userProductsRouter.get('/manage', isAuthenticatedMiddleware, async (req, res) => {
     const { order } = req.query
-    const query = {}
+    const query = { user: req.user.id }
     
     try {
-        const products = await Product.find(query)
+        const userProducts = await Product.find(query)
                         .populate('comments')
                         .sort(order)
-        return res.status(200).json(products)
+        return res.status(200).json(userProducts)
     } catch (error) {
         return res.status(500).json({message: "Internal server error"})
     }
 })
 
-productRouter.get('/:id', isAuthenticatedMiddleware, async (req, res) => {
+userProductsRouter.get('/manage/:id', isAuthenticatedMiddleware, async (req, res) => {
     const { id } = req.params
     try {
         const product = await Product.findById(id)
@@ -41,7 +41,7 @@ productRouter.get('/:id', isAuthenticatedMiddleware, async (req, res) => {
 })
 
 
-/*productRouter.post('/', isAuthenticatedMiddleware, async (req, res) => {
+userProductsRouter.post('/manage', isAuthenticatedMiddleware, async (req, res) => {
     const payload = req.body
     try {
         const newProduct = await Product.create({...payload, user: req.user.id})
@@ -55,7 +55,7 @@ productRouter.get('/:id', isAuthenticatedMiddleware, async (req, res) => {
     }
 })
 
-productRouter.put('/:id', isAuthenticatedMiddleware, async (req, res) => {
+userProductsRouter.put('/manage/:id', isAuthenticatedMiddleware, async (req, res) => {
     const { id } = req.params
     const payload = req.body
     try {
@@ -71,7 +71,7 @@ productRouter.put('/:id', isAuthenticatedMiddleware, async (req, res) => {
     }
 })
 
-productRouter.delete('/:id', isAuthenticatedMiddleware, async (req, res) => {
+userProductsRouter.delete('/manage/:id', isAuthenticatedMiddleware, async (req, res) => {
     const { id } = req.params
     try {
         await Product.findOneAndDelete({_id: id, user: req.user.id})
@@ -82,8 +82,8 @@ productRouter.delete('/:id', isAuthenticatedMiddleware, async (req, res) => {
     }
 })
 
-productRouter.post("/upload", isAuthenticatedMiddleware, fileUpload.single('productImage'), (req, res) => {
+userProductsRouter.post("/upload", isAuthenticatedMiddleware, fileUpload.single('productImage'), (req, res) => {
     res.status(201).json({url: req.file.path})
-})*/
+})
 
-export default productRouter
+export default userProductsRouter
