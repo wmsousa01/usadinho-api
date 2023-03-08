@@ -47,7 +47,7 @@ authRouter.post('/auth/login', async (req, res) => {
     
         const token = jwt.sign({id: user._id, email: user.email}, secret, {expiresIn})
       
-        return res.status(200).json({logged: true, jwt: token})
+        return res.status(200).json({logged: true, jwt: token, user: user.name})
 
     } catch (error) {
     

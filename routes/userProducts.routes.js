@@ -43,6 +43,7 @@ userProductsRouter.get('/manage/:id', isAuthenticatedMiddleware, async (req, res
 
 userProductsRouter.post('/manage', isAuthenticatedMiddleware, async (req, res) => {
     const payload = req.body
+    console.log(payload)
     try {
         const newProduct = await Product.create({...payload, user: req.user.id})
         return res.status(201).json(newProduct)

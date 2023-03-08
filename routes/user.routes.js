@@ -1,28 +1,27 @@
 import { Router } from 'express'
-import Product from '../models/Product.model.js'
+import User from '../models/User.model.js'
 import fileUpload from '../config/cloudinary.config.js'
 import isAuthenticatedMiddleware from '../middlewares/isAuthenticatedMiddleware.js'
 
-const productRouter = Router()
+const userRouter = Router()
 
-productRouter.get('/', async (req, res) => {
+userRouter.get('/users', isAuthenticatedMiddleware, async (req, res) => {
     const { order } = req.query
-    const query = {}
+    const query = { user: req.user.id }
     
     try {
-        const products = await Product.find(query)
-                        .populate('comments')
+        const users = await User.find(query)
                         .sort(order)
-        return res.status(200).json(products)
+        return res.status(200).json(users)
     } catch (error) {
         return res.status(500).json({message: "Internal server error"})
     }
 })
 
-productRouter.get('/:id', isAuthenticatedMiddleware, async (req, res) => {
+userProductsRouter.get('/user/:id', isAuthenticatedMiddleware, async (req, res) => {
     const { id } = req.params
     try {
-        const product = await Product.findById(id)
+        const user = await User.findById(id)
             .populate('user comments')
             .populate({
                 path: 'comments',
@@ -31,7 +30,7 @@ productRouter.get('/:id', isAuthenticatedMiddleware, async (req, res) => {
                     model: 'User'
                 }
             })
-        if(!product) {
+        if(!user) {
             return res.status(404).json({message: 'Not Found'})
         }
         return res.status(200).json(product)
@@ -40,4 +39,5 @@ productRouter.get('/:id', isAuthenticatedMiddleware, async (req, res) => {
     }
 })
 
-export default productRouter
+
+export default userRouter
