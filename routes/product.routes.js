@@ -24,18 +24,12 @@ productRouter.get('/:id', async (req, res) => {
     try {
         const product = await Product.findById(id)
             .populate('user comments')
-            .populate({
-                path: 'comments',
-                populate: {
-                    path: 'user',
-                    model: 'User'
-                }
-            })
         if(!product) {
             return res.status(404).json({message: 'Not Found'})
         }
         return res.status(200).json(product)
     } catch (error) {
+        console.log(error)
         return res.status(500).json({message: "Internal server error"})
     }
 })
